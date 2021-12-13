@@ -12,28 +12,50 @@
     <link rel="stylesheet" href="/assets/css/style.css">
     <title>Weather Dashboard</title>
 </head>
-<body>
-    <header class="d-flex justify-content-center">
+<body class = "h-100">
+    <header class="d-flex justify-content-center bg-primary">
         <h1>Weather Dashboard</h1>
     </header>
 
-    <main>
-        <div class="search">
-            <div class="search-form">
-    
+    <main class="d-flex justify-content-between p-3">
+        <div class="search col-4">
+            <div class="search-form form-group" >
+                <label for="userInput" class="h2 font-weight-bold">Search for a City:</label>
+                <input type="text" class="form-control" id="userInput" placeholder="Toronto">
+                <button class="btn btn-primary submit" type="submit">Submit</button>
             </div>
-            <div class="search-history">
-
+            <div class="search-history mt-2">
+                <!-- <button class="btn btn-secondary btn-block "> Toronto</button> -->
             </div>
         </div>
 
-        <div class="results">
-            <div class="current-forecast">
-
+        <div class="results col-8 p-0">
+            <div class="current-forecast p-2 mb-2" style="border:1px solid">
+                <!-- <h2 class="font-weight-bold">Atlanta <span>(3/30/21)</span></h2>
+                <p>Temp: 73.32 C</p>
+                <p>Wind: 6.67 MPH</p>
+                <p>Humidity: 46%</p>
+                <p>UV Index: 0.47</p> -->
             </div>
-            <div class="future-forecast">
 
+            <h3 id="fiveDay" style="display:none">5-Day Forecast:</h3>
+            <div class="future-forecast container"> 
+                <div class="row">
+                    <!-- <div class="card border-dark col-sm-  bg-info">
+                        <div class="card-body">
+                            <h5 class="card-title">3/313/2021</h5>
+                            <img src="http://openweathermap.org/img/wn/10d@2x.png" alt="">
+                            <p class="card-text">Temp: 73.72</p>
+                            <p class="card-text">Wind: 9.53 MPH</p>
+                            <p class="card-text">Humidity: 66%</p>
+                        </div>
+                    </div> -->
+                    
+                </div>       
+                
+                
             </div>
+
         </div>
     </main>
 
