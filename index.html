@@ -13,7 +13,7 @@
     <title>Weather Dashboard</title>
 </head>
 <body class = "h-100">
-    <header class="d-flex justify-content-center bg-primary">
+    <header class="d-flex justify-content-center bg-primary text-white">
         <h1>Weather Dashboard</h1>
     </header>
 
@@ -25,17 +25,13 @@
                 <button class="btn btn-primary submit" type="submit">Submit</button>
             </div>
             <div class="search-history mt-2">
-                <!-- <button class="btn btn-secondary btn-block "> Toronto</button> -->
+                <button class="btn btn-secondary btn-block" type="submit"> Toronto</button>
             </div>
         </div>
 
         <div class="results col-8 p-0">
-            <div class="current-forecast p-2 mb-2" style="border:1px solid">
-                <!-- <h2 class="font-weight-bold">Atlanta <span>(3/30/21)</span></h2>
-                <p>Temp: 73.32 C</p>
-                <p>Wind: 6.67 MPH</p>
-                <p>Humidity: 46%</p>
-                <p>UV Index: 0.47</p> -->
+            <div class="current-forecast p-2 mb-2">
+                
             </div>
 
             <h3 id="fiveDay" style="display:none">5-Day Forecast:</h3>
@@ -59,7 +55,7 @@
         </div>
     </main>
 
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment.min.js"></script>
     <script src="/assets/js/script.js"></script>
 </body>
 </html>
