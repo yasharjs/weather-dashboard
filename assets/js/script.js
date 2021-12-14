@@ -2,6 +2,7 @@
 var btnSubmit = document.querySelector(".submit");
 var userInput = document.querySelector("#userInput");
 var currentForecast = document.querySelector(".current-forecast");
+var futureForecast = document.querySelector(".future-forecast");
 var myKey = "54b595bf3d71cfd4083a4f576940e6e9"
 var searchHistoryEl = document.querySelector(".search-history");
 var historyArray = []; 
@@ -9,11 +10,13 @@ var historyArray = [];
 
 //get UV index from the "one call" weather api
 var getUviIndex = function(lon,lat) {
-    apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=daily,minutely,hourly";
+    apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=minutely,hourly";
     
     fetch(apiUrl).then(function(response){
         if(response.ok){
             response.json().then(function(data){
+                console.log("one call data: ",data);
+
                 var dataTemp = data.current.uvi;
                 var tempClass;
                 var uvi  =  document.createElement("p");
@@ -22,16 +25,13 @@ var getUviIndex = function(lon,lat) {
                
                     tempClass = "bg-success";
                 }
-
                 else if(6> dataTemp && dataTemp > 2){
                     tempClass = "bg-warning"
                 }
-
                 else if(8> dataTemp && dataTemp> 5){
                     //custom class to set the background to orange
                     s.classList.add("bg-orange");
                 }
-
                 else{
                     tempClass = "bg-alert";
                 }
@@ -68,7 +68,7 @@ var apiCall = function(city){
     fetch(apiUrl).then(function(response){
         if(response.ok){
             response.json().then(function(data){
-                console.log(data);
+                console.log("weather data: ", data);
 
                 //weather icon
                 var iconEl = document.createElement("img");
@@ -109,6 +109,11 @@ var apiCall = function(city){
                 currentForecast.setAttribute("style","border:1px solid;background-color:rgba(211,211,211,0.2)");
                 currentForecast.append(name,temp,wind,humidity);
 
+                //save city to local storage
+                saveSearch(city);
+
+                futureWeather(city);
+
             })
         } else {
             alert("error");
@@ -138,14 +143,12 @@ var saveSearch = function(city){
 }
 //get city name and pass it to apiCall()
 var getUserInput = function(event){
-    
+    event.preventDefault();
     var city = userInput.value.trim();
 
     if(city){
         //reset user input
         userInput.value = "";
-        //save city to local storage
-        saveSearch(city);
         //display city on DOM
         apiCall(city);
     }
