@@ -59,7 +59,7 @@ var getUviIndex = function(lon,lat) {
 
 var futureWeather = function(lon, lat){
     apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=current,minutely,hourly&units=metric";
-
+    futureForecast.innerHTML = "";
     fetch(apiUrl).then(function(response){
         if(response.ok){
             response.json().then(function(data){
@@ -121,7 +121,7 @@ var futureWeather = function(lon, lat){
             })
         }
         else{
-            console.log("error");
+            console.log("no future forecast");
         }
     })
 }
@@ -188,6 +188,7 @@ var apiCall = function(city){
             })
         } else {
             alert("error");
+            futureForecast.innerHTML = "";
         }
     })
 }   
