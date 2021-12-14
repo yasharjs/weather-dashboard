@@ -60,8 +60,7 @@ var getUviIndex = function(lon,lat) {
 //display current forecast for 'city'
 var apiCall = function(city){
     currentForecast.innerHTML = "";
-    historyArray.push(city);
-    console.log(historyArray);
+
    //get API url
     apiUrl = "https://api.openweathermap.org/data/2.5/weather?q=" + city +"&appid="+myKey+"&units=metric";
 
@@ -73,7 +72,7 @@ var apiCall = function(city){
 
                 //weather icon
                 var iconEl = document.createElement("img");
-                iconEl.setAttribute("src","http://openweathermap.org/img/wn/" + data.weather[0].icon +"@2x.png");
+                iconEl.setAttribute("src","http://openweathermap.org/img/wn/" + data.weather[0].icon +".png");
                 iconEl.setAttribute("style"," width:3rem;height:3rem;");
                 
                 //date
@@ -107,7 +106,7 @@ var apiCall = function(city){
                 getUviIndex(lon, lat);
 
                 //display values in DOM
-                currentForecast.setAttribute("style","border:1px solid;background-color:rgba(0,0,0,0.2)");
+                currentForecast.setAttribute("style","border:1px solid;background-color:rgba(211,211,211,0.2)");
                 currentForecast.append(name,temp,wind,humidity);
 
             })
@@ -117,12 +116,37 @@ var apiCall = function(city){
     })
 }   
 
+//save city to search history
+var saveSearch = function(city){
+    //city does not exist in the list
+    if(!historyArray.includes(city)){
+        //push city into array
+        historyArray.push(city)
+        //create and style button element
+        var btnEl = document.createElement("button");
+        btnEl.className = "btn btn-secondary btn-block text-uppercase";
+        btnEl.setAttribute("type","submit");
+        btnEl.textContent = city;
+
+        //display button on DOM
+        searchHistoryEl.append(btnEl);
+
+        //save search history in local storage
+        localStorage.setItem("searchHistory",JSON.stringify(historyArray));
+    }
+    
+}
 //get city name and pass it to apiCall()
 var getUserInput = function(event){
     
     var city = userInput.value.trim();
+
     if(city){
-       // userInput.value = "";
+        //reset user input
+        userInput.value = "";
+        //save city to local storage
+        saveSearch(city);
+        //display city on DOM
         apiCall(city);
     }
     else{
@@ -132,18 +156,27 @@ var getUserInput = function(event){
 
 }
 
+//get button value from search history and call apiCall function
 var getBtnValue = function(event){
     apiCall(event.target.textContent);
 }
 
+//load search history 
 var loadSearchHistory = function(){
-
+    var tempList = JSON.parse(localStorage.getItem("searchHistory"));
+    //list not empty
+    if(tempList){
+        //loop through each element and add it to the DOM
+        for(var i = 0; i < tempList.length;i++){
+            saveSearch(tempList[i]);
+        }
+    }
 }
 
-
+//load search history from local storage at the start
 loadSearchHistory();
-//run getUserInput when clicked
-btnSubmit.addEventListener("click",getUserInput);
 
+btnSubmit.addEventListener("click",getUserInput);
+//when search history button is clicked get its value
 searchHistoryEl.addEventListener("click",getBtnValue);
 
