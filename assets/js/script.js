@@ -10,7 +10,7 @@ var historyArray = [];
 
 //get UV index from the "one call" weather api
 var getUviIndex = function(lon,lat) {
-    apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=minutely,hourly";
+    apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=daily,minutely,hourly";
     
     fetch(apiUrl).then(function(response){
         if(response.ok){
@@ -57,6 +57,74 @@ var getUviIndex = function(lon,lat) {
  
 }
 
+var futureWeather = function(lon, lat){
+    apiUrl = " https://api.openweathermap.org/data/2.5/onecall?lat=" +lat + "&lon=" +lon +"&appid=" + myKey +"&exclude=current,minutely,hourly&units=metric";
+
+    fetch(apiUrl).then(function(response){
+        if(response.ok){
+            response.json().then(function(data){
+                console.log("future-forecast: ", data);
+                //loop through 'daily' array 
+                for(var i = 1 ; i <6; i++){
+                    //create card element 
+                    var cardEl = document.createElement("div");
+                    cardEl.className = "card border-dark col-xs- bg-info";
+
+                    //card body element
+                    var cardBodyEl =document.createElement("div");
+                    cardBodyEl.className = "card-body";
+
+                    //card title(date) element
+                    var cardTitleEl = document.createElement("h5");
+                    cardTitleEl.className = "card-title font-weight-bold"
+                    cardTitleEl.textContent = moment().add(i,'days').format("M/D/Y");
+
+                    //weather icon element
+                    var iconEl = document.createElement("img");
+                    iconEl.className = "w-icon";
+                    iconEl.setAttribute("src","http://openweathermap.org/img/wn/" + data.daily[i].weather[0].icon + ".png");
+
+                    //temperature element
+                    var tempEl = document.createElement("p");
+                    var spanEl= document.createElement("span");
+                    spanEl.className = "font-weight-bold";
+                    spanEl.textContent = "Temp: ";
+                    tempEl.append(spanEl);
+                    tempEl.append(Math.floor(data.daily[i].temp.day));
+                    tempEl.append(" °C")
+
+                    //wind element
+                    var windEl = document.createElement("p");
+                    var windSpan = document.createElement("span");
+                    windSpan.className = "font-weight-bold";
+                    windSpan.textContent = "Wind: ";
+                    windEl.append(windSpan);
+                    windEl.append(data.daily[i].wind_speed);
+                    windEl.append(" MPH");
+
+                    //humidity element
+                    var humidityEl = document.createElement("p");
+                    var humiditySpan = document.createElement("span");
+                    humiditySpan.className = "font-weight-bold";
+                    humiditySpan.textContent = "Humidity: ";
+                    humidityEl.append(humiditySpan);
+                    humidityEl.append(data.daily[i].humidity);
+                    humidityEl.append("%");
+
+                    //add to DOM
+                    cardBodyEl.append(cardTitleEl,iconEl,tempEl,windEl, humidityEl);
+                    cardEl.append(cardBodyEl);
+                    futureForecast.append(cardEl);
+                  
+                }
+
+            })
+        }
+        else{
+            console.log("error");
+        }
+    })
+}
 //display current forecast for 'city'
 var apiCall = function(city){
     currentForecast.innerHTML = "";
@@ -105,6 +173,9 @@ var apiCall = function(city){
                 var lat = data.coord.lat;
                 getUviIndex(lon, lat);
 
+                //5 - day future forecast
+                futureWeather(lon,lat);
+
                 //display values in DOM
                 currentForecast.setAttribute("style","border:1px solid;background-color:rgba(211,211,211,0.2)");
                 currentForecast.append(name,temp,wind,humidity);
@@ -112,7 +183,7 @@ var apiCall = function(city){
                 //save city to local storage
                 saveSearch(city);
 
-                futureWeather(city);
+                
 
             })
         } else {
